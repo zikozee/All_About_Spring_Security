@@ -1,6 +1,7 @@
 package com.zikozee.all_spring_security.student;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -17,24 +18,29 @@ public class StudentManagementController {
             new Student(3, "Anna Smith")
     );
 
+    // hasRole('ROLE_')  hasAnyRole('ROLE_') hasAuthority('permission') hasAnyAuthority('permission')
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMIN_TRAINEE')")
     public List<Student> getAllStudents(){
         log.info("getAllStudents");
         return STUDENTS;
     }
 
     @PostMapping()
+    @PreAuthorize("hasAuthority('student:write')")
     public void registerNewStudent(@RequestBody Student student){
         log.info("registerNewStudent: " +student.toString());
     }
 
     @DeleteMapping(path = "{studentId}")
+    @PreAuthorize("hasAuthority('student:write')")
     public void deleteStudent(@PathVariable("studentId") Integer studentId){
         log.info("deleteStudent: " + "studentId: " +studentId);
     }
 
     @PutMapping(path ="{studentId}")
+    @PreAuthorize("hasAuthority('student:write')")
     public void updateStudent(@PathVariable("studentId")Integer studentId, @RequestBody Student student){
         log.info("updateStudent: " + studentId + " " + student);
     }
