@@ -31,6 +31,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "index", "/css/*",  "/js/*")
                 .permitAll()
                 .antMatchers("/api/**").hasRole(STUDENT.name())
+                .antMatchers(HttpMethod.DELETE, "/management/api/**").hasAnyAuthority(COURSE_WRITE.getPermission())
+                .antMatchers(HttpMethod.POST, "/management/api/**").hasAnyAuthority(COURSE_WRITE.getPermission())
+                .antMatchers(HttpMethod.PUT, "/management/api/**").hasAnyAuthority(COURSE_WRITE.getPermission())
+                .antMatchers(HttpMethod.GET,"/management/api/**").hasAnyRole(ADMIN.name(), ADMIN_TRAINEE.name())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -43,19 +47,22 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails zikoUser = User.builder()
                 .username("ziko")
                 .password(passwordEncoder.encode("ziko123"))
-                .roles(STUDENT.name()) // ROLE_STUDENT
+//                .roles(STUDENT.name()) // ROLE_STUDENT
+                .authorities(STUDENT.getGrantedAuthorities())
                 .build();
 
         UserDetails lindaUser= User.builder()
                 .username("linda")
                 .password(passwordEncoder.encode("password123"))
-                .roles(ADMIN.name()) //ROLE_ADMIN
+//                .roles(ADMIN.name()) //ROLE_ADMIN
+                .authorities(ADMIN.getGrantedAuthorities())
                 .build();
 
         UserDetails tomUser= User.builder()
                 .username("tom")
                 .password(passwordEncoder.encode("password123"))
-                .roles(ADMIN_TRAINEE.name()) //ROLE_ADMIN_TRAINEE
+//                .roles(ADMIN_TRAINEE.name()) //ROLE_ADMIN_TRAINEE
+                .authorities(ADMIN_TRAINEE.getGrantedAuthorities())
                 .build();
 
         return new InMemoryUserDetailsManager(
