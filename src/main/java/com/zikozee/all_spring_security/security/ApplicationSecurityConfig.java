@@ -3,7 +3,6 @@ package com.zikozee.all_spring_security.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+import static com.zikozee.all_spring_security.security.ApplicationUserRole.*;
 
 @Configuration
 @EnableWebSecurity
@@ -38,11 +39,17 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails zikoUser = User.builder()
                 .username("ziko")
                 .password(passwordEncoder.encode("ziko123"))
-                .roles("STUDENT") // ROLE_STUDENT
+                .roles(STUDENT.name()) // ROLE_STUDENT
+                .build();
+
+        UserDetails lindaUser= User.builder()
+                .username("linda")
+                .password(passwordEncoder.encode("password123"))
+                .roles(ADMIN.name()) //ROLE_ADMIN
                 .build();
 
         return new InMemoryUserDetailsManager(
-                zikoUser
+                zikoUser,lindaUser
         );
     }
 }
