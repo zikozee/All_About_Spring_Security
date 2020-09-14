@@ -21,14 +21,14 @@ public class StudentManagementController {
     // hasRole('ROLE_')  hasAnyRole('ROLE_') hasAuthority('permission') hasAnyAuthority('permission')
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMIN_TRAINEE')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMIN_TRAINEE')") //role base authentication appending with ROLE_
     public List<Student> getAllStudents(){
         log.info("getAllStudents");
         return STUDENTS;
     }
 
     @PostMapping()
-    @PreAuthorize("hasAuthority('student:write')")
+    @PreAuthorize("hasAuthority('student:write')") // permission based authentication, added just as it is
     public void registerNewStudent(@RequestBody Student student){
         log.info("registerNewStudent: " +student.toString());
     }

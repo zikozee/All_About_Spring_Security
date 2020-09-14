@@ -46,6 +46,11 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     @Bean // to be instantiated
     public UserDetailsService userDetailsServiceBean() throws Exception {
+        //Highlighting on UserDetails we see  Collection<? extends GrantedAuthority> getAuthorities();
+        //which indicates that UserDetails only have concepts of GrantedAuthorities and NOT roles NOR permissions hence the reason
+        // we built grantedAuthorities( in ApplicationUserRole Enum) from the permissions assigned to each role
+        //note: roles(Highlighting it) takes list of roles i.e String... roles
+
         UserDetails zikoUser = User.builder()
                 .username("ziko")
                 .password(passwordEncoder.encode("ziko123"))
@@ -67,8 +72,15 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorities(ADMIN_TRAINEE.getGrantedAuthorities())
                 .build();
 
+        UserDetails debbyUser= User.builder()
+                .username("debby")
+                .password(passwordEncoder.encode("password123"))
+//                .roles(ADMIN_TRAINEE.name()) //ROLE_ADMIN_TRAINEE
+                .authorities(SUPER_ADMIN.getGrantedAuthorities())
+                .build();
+
         return new InMemoryUserDetailsManager(
-                zikoUser,lindaUser, tomUser
+                zikoUser,lindaUser, tomUser, debbyUser
         );
     }
 }
