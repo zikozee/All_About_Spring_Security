@@ -50,6 +50,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         //which indicates that UserDetails only have concepts of GrantedAuthorities and NOT roles NOR permissions hence the reason
         // we built grantedAuthorities( in ApplicationUserRole Enum) from the permissions assigned to each role
         //note: roles(Highlighting it) takes list of roles i.e String... roles
+        //GrantedAuthority is an interface with one of its implementation as -> SimpleGrantedAuthority
 
         UserDetails zikoUser = User.builder()
                 .username("ziko")

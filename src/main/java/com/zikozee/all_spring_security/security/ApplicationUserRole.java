@@ -21,14 +21,14 @@ public enum ApplicationUserRole {
 
     private final Set<ApplicationUserPermission> permissions;
 
-    public Set<SimpleGrantedAuthority> getGrantedAuthorities(){
+    public Set<SimpleGrantedAuthority> getGrantedAuthorities(){// getPermissions()
         Set<SimpleGrantedAuthority> grantedPermissions = permissions.stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
                 .collect(Collectors.toSet());
 
-        grantedPermissions.add(new SimpleGrantedAuthority("ROLE_" + this.name())); //1:37:00  -> we see that roles builds a list of grantedAuthorities i.e grantedAuthority <-> ROLE_+(role)
+        grantedPermissions.add(new SimpleGrantedAuthority("ROLE_" + this.name())); //1:37:00  -> we see that roles builds a list of grantedAuthorities i.e grantedAuthorities <-> role + permissions
 
-        return grantedPermissions;
+        return grantedPermissions;//grantedAuthorities -> permissions + role
     }
 
     //Check preAuthorize comments in StudentManagementController
