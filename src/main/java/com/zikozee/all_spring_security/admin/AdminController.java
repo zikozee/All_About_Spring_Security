@@ -1,4 +1,4 @@
-package com.zikozee.all_spring_security.student;
+package com.zikozee.all_spring_security.admin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
