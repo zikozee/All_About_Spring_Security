@@ -41,7 +41,11 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.httpBasic(); //Basic Authentication
                 .formLogin()
                 .loginPage("/login").permitAll()// form based authentication
-                .defaultSuccessUrl("/courses", true);
+                .defaultSuccessUrl("/courses", true)
+                .and()
+                .rememberMe()
+                .userDetailsService(userDetailsServiceBean());
+                 // defaults to 2 weeks
     }
 
     @Override
