@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.zikozee.all_spring_security.security.ApplicationUserPermission.COURSE_WRITE;
 import static com.zikozee.all_spring_security.security.ApplicationUserRole.*;
 
@@ -43,9 +45,11 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login").permitAll()// form based authentication
                 .defaultSuccessUrl("/courses", true)
                 .and()
-                .rememberMe()
+                .rememberMe()// defaults to 2 weeks
+                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21)) //overriding remember me to 21 days
+                .key("someSecretKey###@$")//overriding default key
                 .userDetailsService(userDetailsServiceBean());
-                 // defaults to 2 weeks
+
     }
 
     @Override
