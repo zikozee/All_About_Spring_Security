@@ -28,7 +28,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable() // TODO teach in the next session
+                //.csrf().disable() // TODO teach in the next session
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*",  "/js/*")
                 .permitAll()

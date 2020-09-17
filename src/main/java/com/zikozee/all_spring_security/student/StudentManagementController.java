@@ -21,7 +21,8 @@ public class StudentManagementController {
     // hasRole('ROLE_')  hasAnyRole('ROLE_') hasAuthority('permission') hasAnyAuthority('permission')
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMIN_TRAINEE')") //role base authentication appending with ROLE_
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMIN_TRAINEE', 'ROLE_SUPER_ADMIN')") //role base authentication appending with ROLE_
+    @PreAuthorize("hasAuthority('student:read')") //This will be most appropriate i.e any role that has student:read permission, though student should not be able to read all students, good enough student has no permission
     public List<Student> getAllStudents(){
         log.info("getAllStudents");
         return STUDENTS;
