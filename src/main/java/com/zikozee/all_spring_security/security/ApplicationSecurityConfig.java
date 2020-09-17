@@ -29,7 +29,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+//                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*",  "/js/*")
                 .permitAll()
@@ -37,7 +38,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .httpBasic();
+                //.httpBasic(); //Basic Authentication
+                .formLogin();// form based authentication
     }
 
     @Override
