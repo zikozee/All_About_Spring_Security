@@ -39,7 +39,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
                 //.httpBasic(); //Basic Authentication
-                .formLogin();// form based authentication
+                .formLogin()
+                .loginPage("/login").permitAll();// form based authentication
     }
 
     @Override
