@@ -42,11 +42,14 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
                 //.httpBasic(); //Basic Authentication
-                .formLogin()
-                .loginPage("/login").permitAll()// form based authentication
-                .defaultSuccessUrl("/courses", true)
+                    .formLogin()
+                    .loginPage("/login").permitAll()// form based authentication
+                    .defaultSuccessUrl("/courses", true)
+                   // .usernameParameter("userxyz")//this must match the one in form login
+                  //  .passwordParameter("passxyz")//this must match the one in form login
                 .and()
                 .rememberMe()// defaults to 2 weeks
+                //.rememberMeParameter("rememberxyz")//this must match the one in form login
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21)) //overriding remember me to 21 days
                 .key("someSecretKey###@$")//overriding default key
                 .userDetailsService(userDetailsServiceBean())
