@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.concurrent.TimeUnit;
 
@@ -48,7 +49,15 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe()// defaults to 2 weeks
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21)) //overriding remember me to 21 days
                 .key("someSecretKey###@$")//overriding default key
-                .userDetailsService(userDetailsServiceBean());
+                .userDetailsService(userDetailsServiceBean())
+                .and()
+                .logout()
+                    .logoutUrl("/logout")//same as default, we can change
+                    . logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                    .clearAuthentication(true)
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID", "remember-me")
+                    .logoutSuccessUrl("/login");
 
     }
 
