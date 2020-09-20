@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ApplicationUserDetailsService implements UserDetailsService {
 
-    @Qualifier("fake")//necessary if we have more than one implementation
+    @Qualifier("fake")//necessary if we have more than one implementation, check comment by ctrl clicking fake
     private final ApplicationUserDao applicationUserDao;
 
     @Override

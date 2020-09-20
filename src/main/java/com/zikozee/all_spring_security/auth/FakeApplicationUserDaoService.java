@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.zikozee.all_spring_security.security.ApplicationUserRole.*;
+// basically you wanna create another repository, give it a name, e.g Repository("real), implement the ApplicationUserDao with a class and inject the repo in there
+//however there must be a findByUsername in the Repo that will be used by the loadByUsername in the MyDetailsService class
+//hence u'll have a repo, and a new class that implements this ApplicationDao,
+// u can stick with the UserDetails class implemented or extend the fields check "ApplicationUser"  or create your own User and define your fields
 
 @Repository("fake")
 @RequiredArgsConstructor
