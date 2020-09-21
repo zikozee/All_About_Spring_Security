@@ -1,6 +1,7 @@
 package com.zikozee.all_spring_security.security;
 
 import com.zikozee.all_spring_security.auth.ApplicationUserDetailsService;
+import com.zikozee.all_spring_security.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -38,33 +40,37 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         http
 //                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .csrf().disable()
+                .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)//session will no longer be stored in a database
+                .and()
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager())) //authenticationManager() is available as a protected method in WebSecurityConfigurerAdapter, hence we can use directly
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*",  "/js/*")
                 .permitAll()
                 .antMatchers("/api/**").hasRole(STUDENT.name())
                 .anyRequest()
-                .authenticated()
-                .and()
-                //.httpBasic(); //Basic Authentication
-                    .formLogin()
-                    .loginPage("/login").permitAll()// form based authentication
-                    .defaultSuccessUrl("/courses", true)
-                   // .usernameParameter("userxyz")//this must match the one in form login
-                  //  .passwordParameter("passxyz")//this must match the one in form login
-                .and()
-                .rememberMe()// defaults to 2 weeks
-                //.rememberMeParameter("rememberxyz")//this must match the one in form login
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21)) //overriding remember me to 21 days
-                .key("someSecretKey###@$")//overriding default key
-                .userDetailsService(userDetailsService)
-                .and()
-                .logout()
-                    .logoutUrl("/logout")//same as default, we can change
-                    . logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                    .clearAuthentication(true)
-                    .invalidateHttpSession(true)
-                    .deleteCookies("JSESSIONID", "remember-me")
-                    .logoutSuccessUrl("/login");
+                .authenticated();
+//                .and()
+//                //.httpBasic(); //Basic Authentication
+//                    .formLogin()
+//                    .loginPage("/login").permitAll()// form based authentication
+//                    .defaultSuccessUrl("/courses", true)
+//                   // .usernameParameter("userxyz")//this must match the one in form login
+//                  //  .passwordParameter("passxyz")//this must match the one in form login
+//                .and()
+//                .rememberMe()// defaults to 2 weeks
+//                //.rememberMeParameter("rememberxyz")//this must match the one in form login
+//                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21)) //overriding remember me to 21 days
+//                .key("someSecretKey###@$")//overriding default key
+//                .userDetailsService(userDetailsService)
+//                .and()
+//                .logout()
+//                    .logoutUrl("/logout")//same as default, we can change
+//                    . logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+//                    .clearAuthentication(true)
+//                    .invalidateHttpSession(true)
+//                    .deleteCookies("JSESSIONID", "remember-me")
+//                    .logoutSuccessUrl("/login");
 
     }
 
