@@ -59,8 +59,10 @@ public class JwtTokenVerifier extends OncePerRequestFilter {//invoked once per e
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
         }catch (JwtException e){
-            throw new IllegalStateException("Token " + token + "cannot be trusted");
+            throw new IllegalStateException("Token " + token + " cannot be trusted or is expired");
         }
 
+        //This ensures that the request and response gotten as request Params is passed on to the next filter
+        filterChain.doFilter(request, response);
     }
 }

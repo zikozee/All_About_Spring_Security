@@ -1,6 +1,7 @@
 package com.zikozee.all_spring_security.security;
 
 import com.zikozee.all_spring_security.auth.ApplicationUserDetailsService;
+import com.zikozee.all_spring_security.jwt.JwtTokenVerifier;
 import com.zikozee.all_spring_security.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +45,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)//session will no longer be stored in a database
                 .and()
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager())) //authenticationManager() is available as a protected method in WebSecurityConfigurerAdapter, hence we can use directly
+                .addFilterAfter(new JwtTokenVerifier(), JwtUsernameAndPasswordAuthenticationFilter.class)//setting the order since filter request orderis not guaranteed
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*",  "/js/*")
                 .permitAll()
