@@ -42,7 +42,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                             authenticationRequest.getUsername(),
                             authenticationRequest.getPassword());
 
-            //authentication manager checks if username exists if so, then checks if password is correct, if so returns authenticated
+            //authentication manager checks if username exists if so, then checks if password is correct, if so returns authenticated, and this authentication  carries also the authorities n passes it tO authResult below
             Authentication authenticate = authenticationManager.authenticate(authentication);
             return authenticate;
         }catch (IOException e){
@@ -59,10 +59,10 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
         log.info("IS USERNAME CORRECT::-->> " + authResult.getName());
 
-        String key = "securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure"; // another idea keep key on a different server e.g another machine or Firebase. as JSON n read it with JSON SIMPLE
+        String key = "securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure";//must be long // another idea keep key on a different server e.g another machine or Firebase. as JSON n read it with JSON SIMPLE
         String token = Jwts.builder()
                 .setSubject(authResult.getName())//this is supposed to return usernames in DB, if USER is returned use (User)authResult.getPrincipal(), assign to a variable user and do user.getUsername()
-                .claim("authorities", authResult.getAuthorities())// body or Payload data
+                .claim("authorities", authResult.getAuthorities())// setting d body body or Payload data
                 .setIssuedAt(new Date())
                 .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2))) //duration
                 .signWith(Keys.hmacShaKeyFor(key.getBytes())) //signature
