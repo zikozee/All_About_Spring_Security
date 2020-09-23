@@ -3,6 +3,7 @@ package com.zikozee.all_spring_security.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,13 +23,12 @@ import java.util.Date;
 //THIS HANDLES CREDENTIAL SENT AND VALIDATION OF THE CREDENTIALS
 
 @Slf4j
+@RequiredArgsConstructor
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-
-    public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
+    private final JwtConfig jwtConfig;
+    private final SecretKey secretKey;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -57,18 +58,15 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
-        log.info("IS USERNAME CORRECT::-->> " + authResult.getName());
-
-        String key = "securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure";//must be long // another idea keep key on a different server e.g another machine or Firebase. as JSON n read it with JSON SIMPLE
         String token = Jwts.builder()
                 .setSubject(authResult.getName())//this is supposed to return usernames in DB, if USER is returned use (User)authResult.getPrincipal(), assign to a variable user and do user.getUsername()
                 .claim("authorities", authResult.getAuthorities())// setting d body body or Payload data
                 .setIssuedAt(new Date())
-                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2))) //duration
-                .signWith(Keys.hmacShaKeyFor(key.getBytes())) //signature
+                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays()))) //duration
+                .signWith(secretKey) //signature
                 .compact();
 
         //sending token back
-        response.setHeader("Authorization", "Bearer " + token);
+        response.setHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);
     }
 }
